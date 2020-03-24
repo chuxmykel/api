@@ -1,19 +1,19 @@
 import BookService from '../services';
-import Response from '../utils';
+import { ok, created, conflict, notFound } from '../utils';
 
-const { ok, created, conflict, notFound } = Response;
 const { findAll, findById, findByTitle, create, deleteBook } = BookService;
 
 class BookController {
   static create(req, res) {
     const { title, author, published } = req.body;
 
-    if (findByTitle(title).length > 0) return conflict(res, 'Book already exists');
+    if (findByTitle(title)) return conflict(res, 'Book already exists');
     return created(res, create({ title, author, published }));
   }
 
   static findById(req, res) {
-    return ok(res, findById(req.params.id)) || notFound(res);
+    const book = findById(req.params.id);
+    return book ? ok(res, book) : notFound(res);
   }
 
   static findAll(_req, res) {
@@ -21,7 +21,7 @@ class BookController {
   }
 
   static deleteBook(req, res) {
-    if (findById(req.params.id).length < 1) return notFound(res);
+    if (!findById(req.params.id)) return notFound(res);
     deleteBook(req.params.id);
     return ok(res, { message: `Book with id: ${req.params.id} deleted successfully` });
   }

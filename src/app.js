@@ -9,7 +9,7 @@ import 'dotenv/config';
 import routes from './routes';
 
 const app = express();
-const port = process.env.PORT || 4321;
+const port = process.env.PORT;
 const print = debug('dev');
 
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -1,10 +1,11 @@
 import express from 'express';
+import { ok } from '../utils';
 import bookRoutes from './books';
 
 const router = express();
 
 router.get('/', (_req, res) =>
-  res.status(200).json({
+  ok(res, {
     status: res.statusCode,
     message: 'Hello, World!',
   }),

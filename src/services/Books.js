@@ -35,11 +35,13 @@ class BookService {
   }
 
   findByTitle(title) {
-    return this.books.filter(book => book.title === title);
+    const book = this.books.filter(book => book.title === title);
+    return book.length > 0 ? book : null;
   }
 
   findById(id) {
-    return this.books.filter(book => book.id === parseInt(id));
+    const book = this.books.filter(book => book.id === parseInt(id));
+    return book.length > 0 ? book : null;
   }
 
   findAll() {
