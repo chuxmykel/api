@@ -8,14 +8,14 @@ const baseUrl = '/api/v1';
 
 describe('Test Book Controller', () => {
   describe('Get All Books', () => {
-    it('Should get all books successfully', done => {
+    it('Should get all books successfully', (done) => {
       chai
         .request(app)
         .get(`${baseUrl}/books`)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a('array');
-          res.body.forEach(item => {
+          res.body.forEach((item) => {
             item.should.have.property('id');
             item.should.have.property('title');
             item.should.have.property('author');
@@ -28,14 +28,14 @@ describe('Test Book Controller', () => {
 
   describe('Get Specific Book', () => {
     const id = 1;
-    it('Should get the specified book successfully', done => {
+    it('Should get the specified book successfully', (done) => {
       chai
         .request(app)
         .get(`${baseUrl}/books/${id}`)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a('array');
-          res.body.forEach(item => {
+          res.body.forEach((item) => {
             item.should.have.property('id');
             item.id.should.equal(id);
             item.should.have.property('title');
@@ -46,7 +46,7 @@ describe('Test Book Controller', () => {
         });
     });
 
-    it("Should return 404 for a book that's not found", done => {
+    it("Should return 404 for a book that's not found", (done) => {
       chai
         .request(app)
         .get(`${baseUrl}/books/${id + 2000}`)
@@ -66,8 +66,8 @@ describe('Test Book Controller', () => {
       author: 'Smallie',
       published: '2022',
     };
-  
-    it('Should get the specified book successfully', done => {
+
+    it('Should create the book successfully', (done) => {
       chai
         .request(app)
         .post(`${baseUrl}/books`)
@@ -83,7 +83,7 @@ describe('Test Book Controller', () => {
         });
     });
 
-    it('Should not create a book that already exists', done => {
+    it('Should not create a book that already exists', (done) => {
       chai
         .request(app)
         .post(`${baseUrl}/books`)
@@ -100,7 +100,7 @@ describe('Test Book Controller', () => {
 
   describe('Delete Book', () => {
     const id = 2;
-    it('Should delete the specified book successfully', done => {
+    it('Should delete the specified book successfully', (done) => {
       chai
         .request(app)
         .delete(`${baseUrl}/books/${id}`)
@@ -108,12 +108,12 @@ describe('Test Book Controller', () => {
           res.should.have.status(200);
           res.body.should.be.a('object');
           res.body.should.have.property('message');
-          res.body.message.should.equal(`Book with id: ${id} deleted successfully`)
+          res.body.message.should.equal(`Book with id: ${id} deleted successfully`);
           done();
         });
     });
 
-    it("Should return 404 for a book that's not found", done => {
+    it("Should return 404 for a book that's not found", (done) => {
       chai
         .request(app)
         .delete(`${baseUrl}/books/${id + 2000}`)
