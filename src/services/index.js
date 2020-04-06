@@ -1,3 +1,3 @@
-import BookService from './Books';
+import BookService from './BookService';
 
 export default BookService;

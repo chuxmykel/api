@@ -19,7 +19,6 @@ describe('Test Book Controller', () => {
             item.should.have.property('id');
             item.should.have.property('title');
             item.should.have.property('author');
-            item.should.have.property('published');
           });
           done();
         });
@@ -34,14 +33,11 @@ describe('Test Book Controller', () => {
         .get(`${baseUrl}/books/${id}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.should.be.a('array');
-          res.body.forEach((item) => {
-            item.should.have.property('id');
-            item.id.should.equal(id);
-            item.should.have.property('title');
-            item.should.have.property('author');
-            item.should.have.property('published');
-          });
+          res.body.should.be.a('object');
+          res.body.should.have.property('id');
+          res.body.id.should.equal(id);
+          res.body.should.have.property('title');
+          res.body.should.have.property('author');
           done();
         });
     });
@@ -64,7 +60,6 @@ describe('Test Book Controller', () => {
     const book = {
       title: 'The girl in Glasses!',
       author: 'Smallie',
-      published: '2022',
     };
 
     it('Should create the book successfully', (done) => {
@@ -78,7 +73,6 @@ describe('Test Book Controller', () => {
           res.body.should.have.property('id');
           res.body.should.have.property('title');
           res.body.should.have.property('author');
-          res.body.should.have.property('published');
           done();
         });
     });
