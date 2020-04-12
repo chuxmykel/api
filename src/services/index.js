@@ -1,3 +1,7 @@
-import BookService from './BookService';
+import Book from './BookService';
+import Auth from './AuthService';
+import User from './UserService';
 
-export default BookService;
+export const BookService = Book;
+export const AuthService = Auth;
+export const UserService = User;

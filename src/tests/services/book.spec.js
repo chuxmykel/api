@@ -1,5 +1,5 @@
 import chai from 'chai';
-import BookService from '../../services';
+import { BookService } from '../../services';
 
 chai.should();
 

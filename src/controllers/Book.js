@@ -1,4 +1,4 @@
-import BookService from '../services';
+import { BookService } from '../services';
 import { ok, created, conflict, notFound } from '../utils';
 
 const { findAll, findById, findByTitle, create, destroy } = BookService;

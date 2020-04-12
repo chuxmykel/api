@@ -19,8 +19,8 @@ class BookService extends Service {
 
   /**
    * @method findByTitle
-   * @description Returns a book with the given title
-   * @param {String} title - The title of the book to return
+   * @description Finds a book with the given title
+   * @param {String} title - The title of the book to find
    * @returns {object} Returns the found book
    */
   findByTitle(title) {
