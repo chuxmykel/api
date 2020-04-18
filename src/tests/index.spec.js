@@ -12,24 +12,42 @@ describe('Test Book APIs', () => {
       .request(app)
       .get('/')
       .end((_err, res) => {
+        const { status, data } = res.body;
         res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status');
-        res.body.should.have.property('message');
-        res.body.message.should.equal('Hello, World!');
+        status.should.equal(200);
+        data.should.be.a('object');
+        data.should.have.property('status');
+        data.should.have.property('message');
+        data.message.should.equal('Hello, World!');
         done();
       });
   });
+
   it('Should return success on hitting home route', (done) => {
     chai
       .request(app)
       .get(`${baseUrl}/`)
       .end((_err, res) => {
+        const { status, data } = res.body;
         res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status');
-        res.body.should.have.property('message');
-        res.body.message.should.equal('Hello, World!');
+        status.should.equal(200);
+        data.should.be.a('object');
+        data.should.have.property('status');
+        data.should.have.property('message');
+        data.message.should.equal('Hello, World!');
+        done();
+      });
+  });
+
+  it('Should return a 404 error on hitting a non-existent route', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}/non-existent`)
+      .end((_err, res) => {
+        const { status, error } = res.body;
+        res.should.have.status(404);
+        status.should.equal(404);
+        error.should.equal('Resource not found. Double check the url and try again');
         done();
       });
   });

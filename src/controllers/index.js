@@ -1,3 +1,5 @@
-import BookController from './Books';
+import Book from './BookController';
+import User from './UserController';
 
-export const { create, findById, findAll, deleteBook } = BookController;
+export const BookController = Book;
+export const UserController = User;

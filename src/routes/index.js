@@ -1,6 +1,7 @@
 import express from 'express';
 import { ok } from '../utils';
-import bookRoutes from './books';
+import bookRoutes from './book';
+import userRoutes from './user';
 
 const router = express();
 
@@ -12,5 +13,6 @@ router.get('/', (_req, res) =>
 );
 
 router.use('/books', bookRoutes);
+router.use('/users', userRoutes);
 
 export default router;

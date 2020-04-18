@@ -13,12 +13,14 @@ describe('Test Book Controller', () => {
         .request(app)
         .get(`${baseUrl}/books`)
         .end((err, res) => {
+          const { status, data } = res.body;
           res.should.have.status(200);
-          res.body.should.be.a('array');
-          res.body.forEach((item) => {
-            item.should.have.property('id');
-            item.should.have.property('title');
-            item.should.have.property('author');
+          status.should.equal(200);
+          data.should.be.a('array');
+          data.forEach((datum) => {
+            datum.should.have.property('id');
+            datum.should.have.property('title');
+            datum.should.have.property('author');
           });
           done();
         });
@@ -32,12 +34,14 @@ describe('Test Book Controller', () => {
         .request(app)
         .get(`${baseUrl}/books/${id}`)
         .end((err, res) => {
+          const { status, data } = res.body;
           res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('id');
-          res.body.id.should.equal(id);
-          res.body.should.have.property('title');
-          res.body.should.have.property('author');
+          status.should.equal(200);
+          data.should.be.a('object');
+          data.should.have.property('id');
+          data.id.should.equal(id);
+          data.should.have.property('title');
+          data.should.have.property('author');
           done();
         });
     });
@@ -47,9 +51,10 @@ describe('Test Book Controller', () => {
         .request(app)
         .get(`${baseUrl}/books/${id + 2000}`)
         .end((err, res) => {
-          const { error } = res.body;
+          const { status, error } = res.body;
 
           res.should.have.status(404);
+          status.should.equal(404);
           error.should.equal('Resource Not found');
           done();
         });
@@ -58,7 +63,7 @@ describe('Test Book Controller', () => {
 
   describe('Create Book', () => {
     const book = {
-      title: 'The girl in Glasses!',
+      title: 'This is an awesome book!',
       author: 'Smallie',
     };
 
@@ -68,11 +73,13 @@ describe('Test Book Controller', () => {
         .post(`${baseUrl}/books`)
         .send(book)
         .end((err, res) => {
+          const { status, data } = res.body;
           res.should.have.status(201);
-          res.body.should.be.a('object');
-          res.body.should.have.property('id');
-          res.body.should.have.property('title');
-          res.body.should.have.property('author');
+          status.should.equal(201);
+          data.should.be.a('object');
+          data.should.have.property('id');
+          data.should.have.property('title');
+          data.should.have.property('author');
           done();
         });
     });
@@ -83,9 +90,10 @@ describe('Test Book Controller', () => {
         .post(`${baseUrl}/books`)
         .send(book)
         .end((err, res) => {
-          const { error } = res.body;
+          const { status, error } = res.body;
 
           res.should.have.status(409);
+          status.should.equal(409);
           error.should.equal('Book already exists');
           done();
         });
@@ -99,10 +107,12 @@ describe('Test Book Controller', () => {
         .request(app)
         .delete(`${baseUrl}/books/${id}`)
         .end((err, res) => {
+          const { status, data } = res.body;
           res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.message.should.equal(`Book with id: ${id} deleted successfully`);
+          status.should.equal(200);
+          data.should.be.a('object');
+          data.should.have.property('message');
+          data.message.should.equal(`Book with id: ${id} deleted successfully`);
           done();
         });
     });
