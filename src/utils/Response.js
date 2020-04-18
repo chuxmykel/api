@@ -70,6 +70,17 @@ class Response {
   }
 
   /**
+   * @method serverError
+   * @description HTTP 500 serverError response
+   * @param {object} res - The response object from express
+   * @param {String} error - The error message to send in the response
+   * @returns {json} JSON server response
+   */
+  static serverError(res, error) {
+    return Response.error(res, 500, error);
+  }
+
+  /**
    * @method success
    * @description A generic method to format success responses
    * @param {object} res - The response object from express

@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+import bcrypt from 'bcrypt';
+
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -14,5 +17,10 @@ export default (sequelize, DataTypes) => {
   // User.associate = function (models) {
   //   // associations can be defined here
   // };
+
+  User.beforeCreate(async (user) => {
+    const hashedPassword = bcrypt.hashSync(user.password, 10);
+    user.password = hashedPassword;
+  });
   return User;
 };

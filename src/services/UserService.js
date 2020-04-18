@@ -19,17 +19,17 @@ class UserService extends Service {
     this.User = User;
     this.findByEmail = this.findByEmail.bind(this);
     this.login = this.login.bind(this);
-    this.userExists = this.userExists.bind(this);
   }
 
   /**
    * @method create
    * @description Creates a new user
    * @param {Object} details - The user details
+   * @param {Object} uniqueAttributes - an object containing
    * @returns {Object} Returns the newly created resource
    */
-  async create(details) {
-    const user = await super.create(details);
+  async create(details, uniqueAttributes) {
+    const user = await super.create(details, uniqueAttributes);
     return UserService.serialize(user.dataValues);
   }
 
@@ -77,17 +77,6 @@ class UserService extends Service {
     if (!user) throw authError();
     if (!verifyHash(password, user.password)) throw authError();
     return UserService.serialize(user.dataValues);
-  }
-
-  /**
-   * @method userExists
-   * @description Checks if a user exists
-   * @param {String} email - The email of the user to check
-   * @returns {Object} Returns a boolean indicating if the user exists
-   */
-  async userExists(email) {
-    const user = await this.findByEmail(email);
-    return user !== null;
   }
 
   /**

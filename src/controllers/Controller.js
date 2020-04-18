@@ -1,4 +1,4 @@
-import { ok, created, notFound } from '../utils';
+import { ok, created, conflict, notFound, serverError } from '../utils';
 
 /**
  * @class Controller
@@ -10,10 +10,12 @@ class Controller {
    * @description Create a Controller
    * @param {Object} Service - The service object to handle data-layer operations
    * @param {String} resourceName - the name of the resource to operate on
+   * @param {Array} uniqueAttributes - an array of attributes that should be unique
    */
-  constructor(Service, resourceName) {
+  constructor(Service, resourceName, uniqueAttributes) {
     this.Service = Service;
     this.resourceName = resourceName;
+    this.uniqueAttributes = uniqueAttributes;
 
     this.create = this.create.bind(this);
     this.findById = this.findById.bind(this);
@@ -24,20 +26,31 @@ class Controller {
   /**
    * @method create
    * @description Controls the resource creation operation
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @returns {object} Returns a JSON API response
+   * @param {Object} req - The request object
+   * @param {Object} res - The response object
+   * @returns {Object} Returns a JSON API response
    */
   async create(req, res) {
-    return created(res, await this.Service.create(req.body));
+    const uniqueAttributes = {};
+    this.uniqueAttributes.forEach((attribute) => {
+      uniqueAttributes[attribute] = req.body[attribute];
+    });
+    try {
+      return created(res, await this.Service.create(req.body, uniqueAttributes));
+    } catch (error) {
+      if (error.message === 'Resource already exists') {
+        return conflict(res, `${this.resourceName} already exists`);
+      }
+      return serverError(res, error.message);
+    }
   }
 
   /**
    * @method findById
    * @description Gets a resource by it's ID
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @returns {object} Returns a JSON API response
+   * @param {Object} req - The request object
+   * @param {Object} res - The response object
+   * @returns {Object} Returns a JSON API response
    */
   async findById(req, res) {
     const data = await this.Service.findById(req.params.id);
@@ -47,9 +60,9 @@ class Controller {
   /**
    * @method findAll
    * @description Fetches all resources
-   * @param {object} _req - The request object
-   * @param {object} res - The response object
-   * @returns {object} Returns a JSON API response
+   * @param {Object} _req - The request object
+   * @param {Object} res - The response object
+   * @returns {Object} Returns a JSON API response
    */
   async findAll(_req, res) {
     return ok(res, await this.Service.findAll());
@@ -58,12 +71,13 @@ class Controller {
   /**
    * @method destroy
    * @description Deletes a resource
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @returns {object} Returns a JSON API response
+   * @param {Object} req - The request object
+   * @param {Object} res - The response object
+   * @returns {Object} Returns a JSON API response
    */
   async destroy(req, res) {
-    if (!(await this.Service.findById(req.params.id))) return notFound(res);
+    const { id } = req.params;
+    if ((await this.Service.exists({ id })) === false) return notFound(res);
     this.Service.destroy(req.params.id);
     return ok(res, {
       message: `${this.resourceName} with id: ${req.params.id} deleted successfully`,

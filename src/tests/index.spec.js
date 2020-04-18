@@ -22,6 +22,7 @@ describe('Test Book APIs', () => {
         done();
       });
   });
+
   it('Should return success on hitting home route', (done) => {
     chai
       .request(app)
@@ -34,6 +35,19 @@ describe('Test Book APIs', () => {
         data.should.have.property('status');
         data.should.have.property('message');
         data.message.should.equal('Hello, World!');
+        done();
+      });
+  });
+
+  it('Should return a 404 error on hitting a non-existent route', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}/non-existent`)
+      .end((_err, res) => {
+        const { status, error } = res.body;
+        res.should.have.status(404);
+        status.should.equal(404);
+        error.message.should.equal('Resource not found. Double check the url and try again');
         done();
       });
   });

@@ -8,16 +8,6 @@ export const up = (queryInterface, Sequelize) =>
     'Users',
     [
       {
-        firstname: 'Chukwudi',
-        lastname: 'Ngwobia',
-        email: 'coolchuks007@gmail.com',
-        password: bcrypt.hashSync('P@ssword123', saltRounds),
-        isAdmin: true,
-        isActive: true,
-        createdAt: Sequelize.fn('NOW'),
-        updatedAt: Sequelize.fn('NOW'),
-      },
-      {
         firstname: 'trial',
         lastname: 'account',
         email: '002@test.com',

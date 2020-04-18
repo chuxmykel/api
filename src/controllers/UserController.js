@@ -1,6 +1,6 @@
 import Controller from './Controller';
 import { UserService, AuthService } from '../services';
-import { ok, conflict, unAuthorized } from '../utils';
+import { ok, unAuthorized } from '../utils';
 
 const { generateToken } = AuthService;
 
@@ -14,12 +14,12 @@ class UserController extends Controller {
    * @description Create a UserController
    * @param {Object} Service - The service object to handle data-layer operations
    * @param {String} resourceName - the name of the resource to operate on
+   * @param {Array} uniqueAttributes - an array of attributes that should be unique
    */
-  constructor(Service, resourceName) {
-    super(Service, resourceName);
+  constructor(Service, resourceName, uniqueAttributes) {
+    super(Service, resourceName, uniqueAttributes);
 
     this.login = this.login.bind(this);
-    this.create = this.create.bind(this);
   }
 
   /**
@@ -38,19 +38,6 @@ class UserController extends Controller {
       return unAuthorized(res, message);
     }
   }
-
-  /**
-   * @method create
-   * @description Controls the user creation operation
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @returns {object} Returns a JSON API response
-   */
-  async create(req, res) {
-    return (await this.Service.findByEmail(req.body.email))
-      ? conflict(res, 'User already exists')
-      : super.create(req, res);
-  }
 }
 
-export default new UserController(UserService, 'User');
+export default new UserController(UserService, 'User', ['email']);

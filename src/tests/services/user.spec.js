@@ -4,7 +4,7 @@ import { UserService } from '../../services';
 chai.should();
 const { expect } = chai;
 
-const { findAll, findById, findByEmail, create, login, userExists } = UserService;
+const { findAll, findById, findByEmail, create, login, exists } = UserService;
 
 describe('User Service', () => {
   describe('findAll USerService', () => {
@@ -52,13 +52,16 @@ describe('User Service', () => {
   });
 
   describe('create UserService', () => {
+    const userDetails = {
+      firstname: 'trial',
+      lastname: 'account',
+      email: '003@test.com',
+      password: 'P@ssword123',
+    };
+
     it('should create a user successfully', async () => {
-      const user = await create({
-        firstname: 'trial',
-        lastname: 'account',
-        email: '003@test.com',
-        password: 'P@ssword123',
-      });
+      const { email } = userDetails;
+      const user = await create(userDetails, { email });
       user.should.be.a('object');
       user.should.have.property('id');
       user.should.have.property('firstname');
@@ -67,6 +70,15 @@ describe('User Service', () => {
       user.should.have.property('isAdmin');
       user.should.have.property('isActive');
       expect(user.password).to.equal(undefined);
+    });
+
+    it('should not create a user that already exists', async () => {
+      const { email } = userDetails;
+      try {
+        await create(userDetails, { email });
+      } catch (error) {
+        error.message.should.equal('Resource already exists');
+      }
     });
   });
 
@@ -108,15 +120,17 @@ describe('User Service', () => {
     });
   });
 
-  describe('userExists', () => {
+  describe('exists', () => {
     it('should return true for a user that exists', async () => {
-      const status = await userExists('002@test.com');
+      const email = '002@test.com';
+      const status = await exists({ email });
       status.should.be.a('boolean');
       status.should.equal(true);
     });
 
     it('should return false for a user that does not exist', async () => {
-      const status = await userExists('doesnotexist@test.com');
+      const email = 'doesnotexist@test.com';
+      const status = await exists({ email });
       status.should.be.a('boolean');
       status.should.equal(false);
     });

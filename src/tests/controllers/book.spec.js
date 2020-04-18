@@ -63,7 +63,7 @@ describe('Test Book Controller', () => {
 
   describe('Create Book', () => {
     const book = {
-      title: 'The girl in Glasses!',
+      title: 'This is an awesome book!',
       author: 'Smallie',
     };
 
