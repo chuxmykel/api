@@ -47,7 +47,7 @@ describe('Test Book APIs', () => {
         const { status, error } = res.body;
         res.should.have.status(404);
         status.should.equal(404);
-        error.message.should.equal('Resource not found. Double check the url and try again');
+        error.should.equal('Resource not found. Double check the url and try again');
         done();
       });
   });
